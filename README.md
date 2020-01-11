@@ -1,4 +1,4 @@
-*Simple backtrader usage example**
+**Simple backtrader usage example**
 
 Prerequisites: pip3 install -r requirements.txt
 

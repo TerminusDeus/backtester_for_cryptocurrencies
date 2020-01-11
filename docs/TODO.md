@@ -1,4 +1,4 @@
-- compare backtrader performance with another backtesting framework/create your own one
+- compare backtrader performance with another backtesting frameworks/create framework
 - investigate model performance via cerebro instance parameters
 - data with testing results could be stored in some db for further investigation
 - inspect other adddata parameters: cerebro.adddata(bt.feeds.PandasData(dataname=pandas_df, fromdate=datetime(2019, 1, 1)))
