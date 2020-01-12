@@ -92,7 +92,12 @@ def get_ticks_as_pandas_df(market, tick_interval=Tick_interval.FIVE_MIN, custom_
     # 0  0.006900  0.080000  0.006667  0.007000  3123.423352  2015-08-14T00:00:00  29.545465
 
     chart_data_pandas_df = chart_data_pandas_df.dropna()  # drop the missing values in the dataset using the dropna()
-    chart_data_pandas_df.columns = ['BV', 'close', 'high', 'low', 'open', 'datetime', 'volume']  # mask defined columns
+    try:
+        # mask defined columns
+        chart_data_pandas_df.columns = ['BV', 'close', 'high', 'low', 'open', 'datetime', 'volume']
+    except ValueError:
+        return
+
     chart_data_pandas_df = chart_data_pandas_df[custom_columns]  # select only custom columns
     chart_data_pandas_df['datetime'] = pd.to_datetime(chart_data_pandas_df['datetime'])
 

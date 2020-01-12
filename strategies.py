@@ -317,6 +317,8 @@ class MACDStrategy(bt.Strategy):
 #######################################################################################################################
 ################################## UNKNOWN STRATEGIES #################################################################
 #######################################################################################################################
+# Not checked
+# https://github.com/narala558/documents/blob/4be1361df83d8028155dab0a5d7f5647499a3e06/python/sm_backtrader.py
 class SmaCross3(bt.SignalStrategy):
     params = (('pfast', 10), ('pslow', 30),)
 
@@ -325,6 +327,8 @@ class SmaCross3(bt.SignalStrategy):
         self.signal_add(bt.SIGNAL_LONG, bt.ind.CrossOver(sma1, sma2))
 
 
+# Not checked
+# https://github.com/narala558/documents/blob/4be1361df83d8028155dab0a5d7f5647499a3e06/python/sm_backtrader.py
 class SupertrendCross(bt.SignalStrategy):
     params = ()
 
@@ -333,6 +337,8 @@ class SupertrendCross(bt.SignalStrategy):
         self.signal_add(bt.SIGNAL_LONG, bt.ind.CrossOver(sma1, sma2))
 
 
+# Not checked
+# https://github.com/narala558/documents/blob/4be1361df83d8028155dab0a5d7f5647499a3e06/python/sm_backtrader.py
 class RenkoCross(bt.SignalStrategy):
     params = ()
 
