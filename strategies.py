@@ -1,5 +1,7 @@
-import backtrader as bt
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
+import backtrader as bt
 
 # Working
 # Data since 2019, 1, 1:
@@ -10,6 +12,9 @@ import backtrader as bt
 # Starting portfolio (BTC-NEO, oneMin): 10000.00
 # Final portfolio (BTC-NEO, oneMin): 10570.51
 # https://github.com/NicholasTanWeiHong/backtrader-with-brent-futures/blob/master/extensions/strategies.py
+from backtrader.indicators import MovAv
+
+
 class SmaCrossoverStrategy(bt.SignalStrategy):
     """
     Simple Moving Average Crossover Strategy.
@@ -20,8 +25,6 @@ class SmaCrossoverStrategy(bt.SignalStrategy):
     A Buy trade is made when the short SMA crosses above the long SMA,
     and a Sell trade is made when the short SMA crosses below the long SMA.
     """
-
-    title = "sma crossover strategy"
 
     params = (
         ('sma1_period', 10),
@@ -257,10 +260,64 @@ class BBandsStrategy(bt.Strategy):
             self.order = self.sell()
 
 
+# Working (but only for usd(t)-btc pairs)
+# https://github.com/verybadsoldier/backtrader_plotting/blob/87034bf4dc12ba70bafea9cf7aea0fd03cd1421c/tests/test_issue10.py
+class MACDStrategy(bt.Strategy):
+    params = (
+        # Standard MACD Parameters
+        ('macd1', 12),
+        ('macd2', 26),
+        ('macdsig', 9),
+    )
+
+    def __init__(self):
+        self.macd = bt.indicators.MACD(self.data,
+                                       period_me1=self.p.macd1,
+                                       period_me2=self.p.macd2,
+                                       period_signal=self.p.macdsig)
+        # backtrader.LinePlotterIndicator(macd, name='MACD')
+        # Cross of macd.macd and macd.signal
+        self.mcross = bt.indicators.CrossOver(self.macd.macd, self.macd.signal)
+
+    # backtrader.LinePlotterIndicator(mcross, name='MACDCross')
+
+    def start(self):
+        self.order = None  # sentinel to avoid operations on pending order
+
+    def log(self, txt, dt=None):
+        """ Logging function for this strategy
+        """
+        dt = dt or self.datas[0].datetime.date(0)
+        time = self.datas[0].datetime.time()
+        print('%s,%s' % (dt.isoformat(), txt))
+
+    def next(self):
+        if self.order:
+            return  # pending order execution
+
+        if not self.position:  # not in the market
+            if self.mcross[0] > 0.0 and self.macd.lines.signal[0] > 0 and self.macd.lines.macd[0] > 0:
+                self.order = self.buy()
+                self.log('BUY CREATED, %.2f' % self.data[0])
+        # else:
+        # 	if self.mcross[0] > 0.0 and self.macd.lines.signal[0] < 0 and self.macd.lines.macd[0] < 0:
+        # 		self.order = self.buy()
+        # 		self.log('BUY CREATED, %.2f' % self.data[0])
+
+        else:  # in the market
+            if self.mcross[0] < 0.0 and self.macd.lines.signal[0] < 0 and self.macd.lines.macd[0] < 0:
+                self.sell()  # stop met - get out
+                self.log('BUY CREATED, %.2f' % self.data[0])
+        # else:
+        # 	if self.mcross[0] < 0.0 and self.macd.lines.signal[0] > 0 and self.macd.lines.macd[0] > 0:
+        # 		self.sell()  # stop met - get out
+        # 		self.log('BUY CREATED, %.2f' % self.data[0]
+
+
 #######################################################################################################################
 ################################## UNKNOWN STRATEGIES #################################################################
 #######################################################################################################################
-class SmaCross(bt.SignalStrategy):
+class SmaCross3(bt.SignalStrategy):
     params = (('pfast', 10), ('pslow', 30),)
 
     def __init__(self):
