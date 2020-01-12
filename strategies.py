@@ -345,3 +345,7 @@ class RenkoCross(bt.SignalStrategy):
     def __init__(self):
         sma1, sma2 = bt.ind.SMA(period=self.p.pfast), bt.ind.SMA(period=self.p.pslow)
         self.signal_add(bt.SIGNAL_LONG, bt.ind.CrossOver(sma1, sma2))
+
+
+class QFL(bt.SignalStrategy):
+    params = ()
